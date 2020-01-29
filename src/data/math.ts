@@ -70,9 +70,7 @@ export function quantilesHigher(arr: ReadonlyArray<number>) {
  * ‘nearest’: i or j, whichever is nearest
  */
 export function quantilesNearest(arr: ReadonlyArray<number>) {
-  return quantilesInterpolate(arr, (i, j, fraction) =>
-    fraction < 0.5 ? i : j
-  );
+  return quantilesInterpolate(arr, (i, j, fraction) => (fraction < 0.5 ? i : j));
 }
 
 /**
@@ -96,8 +94,7 @@ export function fivenum(arr: ReadonlyArray<number>): BoxplotBaseStats {
 
   // assuming R 1 index system, so arr[1] is the first element
   const n4 = Math.floor((n + 3) / 2) / 2;
-  const compute = (d: number) =>
-    0.5 * (arr[Math.floor(d) - 1] + arr[Math.ceil(d) - 1]);
+  const compute = (d: number) => 0.5 * (arr[Math.floor(d) - 1] + arr[Math.ceil(d) - 1]);
 
   return {
     min: arr[0],
@@ -114,20 +111,12 @@ export function fivenum(arr: ReadonlyArray<number>): BoxplotBaseStats {
  * @param {number[]} arr sorted array
  * @param {number} coef
  */
-export function whiskers(
-  boxplot: BoxplotBaseStats,
-  arr: ReadonlyArray<number>,
-  coef = 1.5
-) {
+export function whiskers(boxplot: BoxplotBaseStats, arr: ReadonlyArray<number>, coef = 1.5) {
   const iqr = boxplot.q3 - boxplot.q1;
   // since top left is max
   const coefValid = typeof coef === 'number' && coef > 0;
-  let whiskerMin = coefValid
-    ? Math.max(boxplot.min, boxplot.q1 - coef * iqr)
-    : boxplot.min;
-  let whiskerMax = coefValid
-    ? Math.min(boxplot.max, boxplot.q3 + coef * iqr)
-    : boxplot.max;
+  let whiskerMin = coefValid ? Math.max(boxplot.min, boxplot.q1 - coef * iqr) : boxplot.min;
+  let whiskerMax = coefValid ? Math.min(boxplot.max, boxplot.q3 + coef * iqr) : boxplot.max;
 
   if (Array.isArray(arr)) {
     // compute the closest real element
@@ -176,9 +165,7 @@ const methodLookup = {
   midpoint: quantilesMidpoint,
 };
 
-function determineQuantiles(
-  q: QuantilesMethod | ((arr: ReadonlyArray<number>) => BoxplotBaseStats)
-) {
+function determineQuantiles(q: QuantilesMethod | ((arr: ReadonlyArray<number>) => BoxplotBaseStats)) {
   if (typeof q === 'function') {
     return q;
   }
@@ -194,9 +181,7 @@ export declare type BoxplotStatsOptions = {
   /**
    * @default 7
    */
-  quantiles:
-    | QuantilesMethod
-    | ((arr: ReadonlyArray<number>) => BoxplotBaseStats);
+  quantiles: QuantilesMethod | ((arr: ReadonlyArray<number>) => BoxplotBaseStats);
 };
 
 const defaultStatsOptions: BoxplotStatsOptions = {
@@ -221,10 +206,7 @@ export declare type BoxplotStats = BoxplotBaseStats & {
   whiskerMax: number;
 };
 
-export function boxplotStats(
-  arr: ReadonlyArray<number>,
-  options: Partial<BoxplotStatsOptions> = {}
-): BoxplotStats {
+export function boxplotStats(arr: ReadonlyArray<number>, options: Partial<BoxplotStatsOptions> = {}): BoxplotStats {
   // console.assert(Array.isArray(arr));
   if (arr.length === 0) {
     return {

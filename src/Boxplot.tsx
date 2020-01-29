@@ -3,10 +3,18 @@ import { BoxplotStats, BoxplotStatsOptions, boxplotStats } from './data/math';
 import { NumberFormat, defaultNumberFormat, percent } from './formatter';
 import styled, { themed } from './styled';
 
+export declare type BoxplotSortHint = 'min' | 'max' | 'median' | 'q1' | 'q3' | 'mean';
+
 export declare type BoxplotProps = {
   data: ReadonlyArray<number> | BoxplotStats;
-  sortHint?: 'min' | 'max' | 'median' | 'q1' | 'q3';
+  sortHint?: BoxplotSortHint;
   formatter?: NumberFormat;
+  /**
+   * disable rendering of the mean indicator
+   */
+  noMean?: boolean;
+  domain?: [number, number];
+
   className?: string;
   style?: CSSProperties;
 } & Partial<BoxplotStatsOptions>;
@@ -121,13 +129,25 @@ const BoxplotOutlier = styled('div')`
 const Boxplot: FC<BoxplotProps> = ({
   className,
   style,
+  domain,
+  noMean,
   data,
   sortHint,
   formatter = defaultNumberFormat,
   ...options
 }) => {
   const boxplot = Array.isArray(data) ? boxplotStats(data, options) : (data as BoxplotStats);
-  const range = boxplot.whiskerMax - boxplot.whiskerMin;
+  const domainMin = domain ? domain[0] : boxplot.min;
+  const domainMax = domain ? domain[1] : boxplot.max;
+  const domainRange = domainMax - domainMin;
+
+  const scale = (v: number) => (v - domainMin) / domainRange;
+  const q1 = scale(boxplot.q1);
+  const q3 = scale(boxplot.q3);
+  const median = scale(boxplot.median);
+  const mean = scale(boxplot.mean);
+  const whiskerMin = scale(boxplot.whiskerMin);
+  const whiskerRange = scale(boxplot.whiskerMax) - whiskerMin;
 
   // compute proper sort hint location
   let cleanSortHint = sortHint;
@@ -144,26 +164,24 @@ const Boxplot: FC<BoxplotProps> = ({
 
   return (
     <BoxplotContainer title={computeLabel(boxplot, formatter)} className={className} style={style}>
-      <div></div>
-      <BoxplotWhiskers data-sort={cleanSortHint} style={{ left: percent(boxplot.whiskerMin), width: percent(range) }}>
+      <BoxplotWhiskers data-sort={cleanSortHint} style={{ left: percent(whiskerMin), width: percent(whiskerRange) }}>
         <BoxplotBox
           data-sort={cleanSortHint}
           style={{
-            left: percent((boxplot.q1 - boxplot.whiskerMin) / range),
-            width: percent((boxplot.q3 - boxplot.q1) / range),
+            left: percent((q1 - whiskerMin) / whiskerRange),
+            width: percent((q3 - q1) / whiskerRange),
           }}
         />
-        <BoxplotMedian
-          data-sort={cleanSortHint}
-          style={{ left: percent((boxplot.median - boxplot.whiskerMin) / range) }}
-        />
-        <BoxplotMean data-sort={cleanSortHint} style={{ left: percent((boxplot.mean - boxplot.whiskerMin) / range) }} />
+        <BoxplotMedian data-sort={cleanSortHint} style={{ left: percent((median - whiskerMin) / whiskerRange) }} />
+        {!noMean && (
+          <BoxplotMean data-sort={cleanSortHint} style={{ left: percent((mean - whiskerMin) / whiskerRange) }} />
+        )}
       </BoxplotWhiskers>
       {outliers.map(outlier => (
-        <BoxplotOutlier key={outlier} style={{ left: percent(outlier) }} />
+        <BoxplotOutlier key={outlier} style={{ left: percent(scale(outlier)) }} />
       ))}
-      {maxOutlier && <BoxplotOutlier style={{ left: percent(maxOutlier) }} />}
-      {minOutlier && <BoxplotOutlier style={{ left: percent(minOutlier) }} />}
+      {maxOutlier && <BoxplotOutlier style={{ left: percent(scale(maxOutlier)) }} />}
+      {minOutlier && <BoxplotOutlier style={{ left: percent(scale(minOutlier)) }} />}
     </BoxplotContainer>
   );
 };
