@@ -1,6 +1,6 @@
 // based on https://github.com/datavisyn/chartjs-chart-box-and-violin-plot
 
-declare type BoxplotBaseStats = {
+export declare type BoxplotBaseStats = {
   min: number;
   max: number;
   q1: number;
@@ -40,7 +40,7 @@ function quantilesInterpolate(
  * Uses R's quantile algorithm type=7.
  * https://en.wikipedia.org/wiki/Quantile#Quantiles_of_a_population
  */
-export function quantilesType7(arr: ReadonlyArray<number>) {
+function quantilesType7(arr: ReadonlyArray<number>) {
   return quantilesInterpolate(arr, (a, b, alpha) => a + alpha * (b - a));
 }
 
@@ -48,35 +48,35 @@ export function quantilesType7(arr: ReadonlyArray<number>) {
  * ‘linear’: i + (j - i) * fraction, where fraction is the fractional part of the index surrounded by i and j.
  * (same as type 7)
  */
-export function quantilesLinear(arr: ReadonlyArray<number>) {
+function quantilesLinear(arr: ReadonlyArray<number>) {
   return quantilesInterpolate(arr, (i, j, fraction) => i + (j - i) * fraction);
 }
 
 /**
  * ‘lower’: i.
  */
-export function quantilesLower(arr: ReadonlyArray<number>) {
+function quantilesLower(arr: ReadonlyArray<number>) {
   return quantilesInterpolate(arr, i => i);
 }
 
 /**
  * 'higher': j.
  */
-export function quantilesHigher(arr: ReadonlyArray<number>) {
+function quantilesHigher(arr: ReadonlyArray<number>) {
   return quantilesInterpolate(arr, (_, j) => j);
 }
 
 /**
  * ‘nearest’: i or j, whichever is nearest
  */
-export function quantilesNearest(arr: ReadonlyArray<number>) {
+function quantilesNearest(arr: ReadonlyArray<number>) {
   return quantilesInterpolate(arr, (i, j, fraction) => (fraction < 0.5 ? i : j));
 }
 
 /**
  * ‘midpoint’: (i + j) / 2
  */
-export function quantilesMidpoint(arr: ReadonlyArray<number>) {
+function quantilesMidpoint(arr: ReadonlyArray<number>) {
   return quantilesInterpolate(arr, (i, j) => (i + j) * 0.5);
 }
 
@@ -88,7 +88,7 @@ export function quantilesMidpoint(arr: ReadonlyArray<number>) {
  * two observations otherwise.
  * @param {number[]} arr sorted array
  */
-export function fivenum(arr: ReadonlyArray<number>): BoxplotBaseStats {
+function fivenum(arr: ReadonlyArray<number>): BoxplotBaseStats {
   // based on R fivenum
   const n = arr.length;
 
@@ -111,7 +111,7 @@ export function fivenum(arr: ReadonlyArray<number>): BoxplotBaseStats {
  * @param {number[]} arr sorted array
  * @param {number} coef
  */
-export function whiskers(boxplot: BoxplotBaseStats, arr: ReadonlyArray<number>, coef = 1.5) {
+function whiskers(boxplot: BoxplotBaseStats, arr: ReadonlyArray<number>, coef = 1.5) {
   const iqr = boxplot.q3 - boxplot.q1;
   // since top left is max
   const coefValid = typeof coef === 'number' && coef > 0;

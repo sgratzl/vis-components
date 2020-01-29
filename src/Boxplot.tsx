@@ -1,7 +1,10 @@
 import React, { FC, CSSProperties } from 'react';
 import { BoxplotStats, BoxplotStatsOptions, boxplotStats } from './data/math';
-import { NumberFormat, defaultNumberFormat, percent } from './formatter';
-import styled, { themed } from './styled';
+import { NumberFormat, defaultNumberFormat } from './formatter';
+import styled, { themed } from './internal/styled';
+import { percent } from './internal';
+
+export { BoxplotStats, BoxplotStatsOptions } from './data/math';
 
 export declare type BoxplotSortHint = 'min' | 'max' | 'median' | 'q1' | 'q3' | 'mean';
 
@@ -13,6 +16,9 @@ export declare type BoxplotProps = {
    * disable rendering of the mean indicator
    */
   noMean?: boolean;
+  /**
+   * specifies the data domain otherwise will fall back to min / max
+   */
   domain?: [number, number];
 
   className?: string;

@@ -1,16 +1,5 @@
 import styled, { CreateStyled } from '@emotion/styled';
-
-const defaultTheme = {
-  boxplot: {
-    sortIndicator: 'red',
-    stroke: 'black',
-    dotSize: 5,
-    box: 'grey',
-    outlier: 'black',
-  },
-};
-
-export type Theme = typeof defaultTheme;
+import { Theme, defaultTheme } from '../theme';
 
 export default styled as CreateStyled<Theme>;
 
