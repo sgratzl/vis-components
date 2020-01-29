@@ -1,5 +1,5 @@
-import React from 'react';]
-import { Loading } from '@';
+import React from 'react';
+import Loading from './Loading';
 
 export default {
   component: Loading,
@@ -8,4 +8,4 @@ export default {
 
 export const Default = () => {
   return <Loading />;
-}; 
+};

@@ -1,16 +1,21 @@
 import styled, { CreateStyled } from '@emotion/styled';
 
-export type Theme = {
-  colors: {
-    sortIndicator: 'red';
-  };
+const defaultTheme = {
   boxplot: {
-    stroke: 'black';
-    dotSize: 5;
-    box: 'grey';
-    outlier: 'black';
-  };
-  // ...
+    sortIndicator: 'red',
+    stroke: 'black',
+    dotSize: 5,
+    box: 'grey',
+    outlier: 'black',
+  },
 };
 
+export type Theme = typeof defaultTheme;
+
 export default styled as CreateStyled<Theme>;
+
+export function themed(f: (theme: Theme) => any) {
+  return (props: any) => {
+    return f((props.theme ?? {}).boxplot ? props.theme : defaultTheme);
+  };
+}
