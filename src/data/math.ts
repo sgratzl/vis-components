@@ -40,7 +40,7 @@ function quantilesInterpolate(
  * Uses R's quantile algorithm type=7.
  * https://en.wikipedia.org/wiki/Quantile#Quantiles_of_a_population
  */
-function quantilesType7(arr: ReadonlyArray<number>) {
+export function quantilesType7(arr: ReadonlyArray<number>) {
   return quantilesInterpolate(arr, (a, b, alpha) => a + alpha * (b - a));
 }
 
@@ -88,7 +88,7 @@ function quantilesMidpoint(arr: ReadonlyArray<number>) {
  * two observations otherwise.
  * @param {number[]} arr sorted array
  */
-function fivenum(arr: ReadonlyArray<number>): BoxplotBaseStats {
+export function fivenum(arr: ReadonlyArray<number>): BoxplotBaseStats {
   // based on R fivenum
   const n = arr.length;
 
