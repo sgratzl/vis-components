@@ -1,8 +1,11 @@
 {
+  "name": "@sgratzl/vis-components",
+  "author": "Samuel Gratzl",
   "version": "0.1.0",
   "license": "MIT",
+  "module": "dist/vis-components.esm.js",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -13,10 +16,11 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
-  },
-  "peerDependencies": {
-    "react": ">=16"
+    "build-storybook": "build-storybook",
+    "release:major": "release-it major",
+    "release:minor": "release-it minor",
+    "release:patch": "release-it patch",
+    "release:pre": "release-it --preRelease=alpha --npm.tag=next"
   },
   "husky": {
     "hooks": {
@@ -29,9 +33,9 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "vis-components",
-  "author": "Samuel Gratzl",
-  "module": "dist/vis-components.esm.js",
+  "peerDependencies": {
+    "react": ">=16"
+  },
   "devDependencies": {
     "@babel/core": "^7.8.3",
     "@storybook/addon-actions": "^5.3.9",
@@ -47,6 +51,7 @@
     "husky": "^4.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "release-it": "^12.4.3",
     "ts-loader": "^6.2.1",
     "tsdx": "^0.12.3",
     "tslib": "^1.10.0",
