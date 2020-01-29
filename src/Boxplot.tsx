@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { BoxplotStats, BoxplotStatsOptions, boxplotStats } from './data/math';
-import { NumberFormat, defaultNumberFormat, percent } from 'formatter';
+import { NumberFormat, defaultNumberFormat, percent } from './formatter';
 import styled, { Theme } from './styled';
 
 export declare type BoxplotProps = {
@@ -28,7 +28,6 @@ const BoxplotContainer = styled('div')`
 
 const BoxplotWhiskers = styled('div')<BoxWrapper>(
   `
-  // whiskers + contains everything
   position: relative;
   border-left: 1px solid ${({ theme }: { theme: Theme }) =>
     theme.boxplot.stroke};
@@ -38,8 +37,6 @@ const BoxplotWhiskers = styled('div')<BoxWrapper>(
   max-height: 30px;
 
   &::before {
-
-    // whiskers line
     content: '';
     position: absolute;
     top: 0;
